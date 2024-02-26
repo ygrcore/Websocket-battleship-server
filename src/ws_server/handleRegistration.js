@@ -1,6 +1,7 @@
 import { players } from "./index.js";
+import { addPlayer } from "../utils/addPlayer.js";
 
-function handleRegistration(req) {
+function handleRegistration(req, ws) {
   const parsedData = JSON.parse(req.data);
 
   const {name, password} = parsedData;
@@ -22,7 +23,7 @@ function handleRegistration(req) {
   };
 
   if (!existingPlayer) {
-      players.push({ name, password });
+    addPlayer(ws, name, password)
   } else {
       if (existingPlayer.password !== password) {
           responseData.error = true;
@@ -34,7 +35,7 @@ function handleRegistration(req) {
 
   const newResponseData = JSON.stringify(responseData);
   response.data = newResponseData;
-  return response;
+  return JSON.stringify(response);
 }
 
 export default handleRegistration;
