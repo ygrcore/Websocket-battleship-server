@@ -1,21 +1,22 @@
-import { httpServer } from "./src/http_server/index.js";
-import { players, wsServer, rooms, connections } from "./src/ws_server/index.js";
-import handleRegistration from "./src/ws_server/handleRegistration.js";
-import { handleCreateRoom } from './src/ws_server/handleCreateRoom.js';
+import * as WebSocket from 'ws';
+import { httpServer } from "./src/http_server/index";
+import { players, wsServer, rooms, connections } from "./src/ws_server/index";
+import handleRegistration from "./src/ws_server/handleRegistration";
+import { handleCreateRoom } from './src/ws_server/handleCreateRoom';
 
 const HTTP_PORT = 8181;
 
 console.log(`Start static http server on the ${HTTP_PORT} port!`);
 httpServer.listen(HTTP_PORT);
 
-wsServer.on("connection", (ws) => {
+wsServer.on("connection", (ws: WebSocket) => {
   const id = Date.now();
   connections[id] = { websocket: ws };
   console.log("WebSocket connection established");
 
   ws.on("error", console.error);
 
-  ws.on("message", message => {
+  ws.on("message", (message: string) => {
     const req = JSON.parse(message);
     const { type } = req;
     console.log('MESSAGE: ', req);
@@ -40,7 +41,7 @@ wsServer.on("connection", (ws) => {
     }
   });
 
-  ws.on("close", (event) => {
+  ws.on("close", (event: WebSocket.CloseEvent) => {
     console.log(
       `WebSocket connection closed, code=${event.code}, reason=${event.reason}`
     );

@@ -1,4 +1,4 @@
-export const handleCreateRoom = (roomId, name, index) => {
+export const handleCreateRoom = (roomId: number, name: string, index: number) => {
   const roomData = {
     roomId: roomId,
     roomUsers: [
